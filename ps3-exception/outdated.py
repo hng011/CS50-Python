@@ -16,7 +16,7 @@ months = [
 # Set to low
 months = [v.lower()[:3] for v in months]
 
-def check_len(m, d) -> tuple:
+def check_len(m:str, d:str) -> tuple:
     if not ( int(d) > 31 or int(m) > 12):
         if len(m) < 2:
             m = "0"+m
@@ -26,8 +26,10 @@ def check_len(m, d) -> tuple:
     else:
         date_conv()
 
-def remove_wp(m, d, y):
-    return (m.replace(' ',''), d.replace(' ',''), y.replace(' ',''))
+def formatted_date(m:str, d:str, y:str) -> str:
+    m, d, y = (m.replace(' ',''), d.replace(' ',''), y.replace(' ',''))    
+    m, d = check_len(m, d)
+    return f"{y}-{m}-{d}"
 
 def date_conv() -> str:
     while(True):
@@ -36,17 +38,13 @@ def date_conv() -> str:
 
             if "/" in x:
                 m, d, y = x.split("/")
-                m, d, y = remove_wp(m, d, y)
-                m, d = check_len(m, d)
-                return f"{y}-{m}-{d}"
+                return formatted_date(m, d, y)
 
             elif x[:3] in months:
-                dm, y = x.split(",")
-                m, d = dm.split(" ")
-                m, d, y = remove_wp(m, d, y)
+                md, y = x.split(",")
+                m, d = md.split(" ")
                 m = str(months.index(m[:3])+1)
-                m, d = check_len(m, d)
-                return f"{y}-{m}-{d}"
+                return formatted_date(m, d, y)
 
         except EOFError:
             return 0
